@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 网站标题：浏览器标签页上显示的文字，改成你的网站名字 -->
+<title>小林的个人主页 · 示例网站</title>
+<!-- favicon：浏览器标签页的小图标，下面用内联 SVG 画了一个圆点，可随意改 -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314211E'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D6A24A'/%3E%3C/svg%3E">
+<!-- 加载中文字体：标题用衬线(Noto Serif SC)，正文用无衬线(Noto Sans SC)。字体来自自托管镜像，无需翻墙 -->
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+  /* ================= 全局变量：改配色主要改这里 ================= */
+  :root{
+    --ink:   #14211E;   /* 主文字、深色背景 */
+    --paper: #F6F4EE;   /* 页面底色（暖白，不刺眼） */
+    --card:  #FFFFFF;   /* 卡片底色 */
+    --accent:#D6A24A;   /* 强调色（金色） */
+    --muted: #6B756F;   /* 次要文字 */
+    --line:  #E2DED3;   /* 分隔线颜色 */
+    --radius:14px;      /* 圆角大小 */
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Noto Sans SC",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* 标题用衬线字体，更有「作品集」的气质 */
+  h1,h2,h3,.display{font-family:"Noto Serif SC",Georgia,"Songti SC",serif;font-weight:700}
+  .container{max-width:1080px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+
+  /* ================= 顶部导航 ================= */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(246,244,238,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-family:"Noto Serif SC",serif;font-weight:700;font-size:1.15rem;letter-spacing:.02em}
+  .logo b{color:var(--accent)}
+  .nav-links{display:flex;gap:28px;font-size:.95rem}
+  .nav-links a{color:var(--muted);transition:color .2s;padding:8px 0}
+  .nav-links a:hover{color:var(--ink)}
+
+  /* ================= Hero 首屏 ================= */
+  header.hero{
+    padding:96px 0 80px;
+    background:var(--ink);color:var(--paper);
+    /* 底部柔和渐变收口，让深色区自然过渡 */
+    background-image:radial-gradient(60% 90% at 85% 10%,rgba(214,162,74,.18),transparent 60%);
+  }
+  .hero-inner{max-width:720px}
+  .hero .eyebrow{color:var(--accent);font-size:.9rem;letter-spacing:.18em;margin-bottom:20px}
+  .hero h1{font-size:clamp(2.4rem,6vw,4rem);line-height:1.2;margin-bottom:24px}
+  .hero h1 .accent{color:var(--accent)}
+  .hero p{color:rgba(246,244,238,.82);font-size:1.1rem;max-width:34em;margin-bottom:36px}
+  .btn-row{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;padding:12px 26px;border-radius:999px;
+    font-size:.98rem;cursor:pointer;border:none;transition:transform .15s,box-shadow .15s;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.18)}
+  .btn-primary{background:var(--accent);color:var(--ink);font-weight:600}
+  .btn-ghost{background:transparent;color:var(--paper);border:1px solid rgba(246,244,238,.4)}
+
+  /* ================= 通用分节 ================= */
+  section{padding:80px 0}
+  .sec-head{margin-bottom:44px}
+  .sec-head .eyebrow{color:var(--accent);font-size:.85rem;letter-spacing:.18em;margin-bottom:10px}
+  .sec-head h2{font-size:clamp(1.7rem,4vw,2.4rem)}
+  .sec-head p{color:var(--muted);margin-top:12px;max-width:36em}
+
+  /* ================= 关于我 + 数据 ================= */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:start}
+  .about-grid p{color:#3A443F;margin-bottom:14px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .stat{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 16px;text-align:center;
+  }
+  .stat .num{font-family:"Noto Serif SC",serif;font-size:2rem;font-weight:700;color:var(--accent)}
+  .stat .label{font-size:.85rem;color:var(--muted);margin-top:4px}
+
+  /* ================= 作品卡片 ================= */
+  .projects{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .proj{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;
+  }
+  .proj:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(20,33,30,.12)}
+  .proj .thumb{height:150px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-family:"Noto Serif SC",serif}
+  .proj:nth-child(1) .thumb{background:#E8E3D4;color:#7A6A34}
+  .proj:nth-child(2) .thumb{background:#DCE7E2;color:#2E5B4A}
+  .proj:nth-child(3) .thumb{background:#EFE0DC;color:#9A4636}
+  .proj .body{padding:20px}
+  .proj h3{font-size:1.12rem;margin-bottom:8px}
+  .proj .tag{font-size:.78rem;color:var(--accent);letter-spacing:.06em;margin-bottom:10px}
+  .proj p{font-size:.92rem;color:var(--muted)}
+
+  /* ================= 联系 ================= */
+  .contact-box{
+    background:var(--ink);color:var(--paper);border-radius:var(--radius);
+    padding:52px 48px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;
+    background-image:radial-gradient(50% 100% at 90% 0%,rgba(214,162,74,.16),transparent 60%);
+  }
+  .contact-box h2{font-size:clamp(1.5rem,3.5vw,2rem);margin-bottom:8px}
+  .contact-box p{color:rgba(246,244,238,.78)}
+  .mail-link{display:inline-block;margin-top:6px;color:var(--accent);font-size:1.05rem}
+
+  /* ================= 页脚 ================= */
+  footer{padding:28px 0 40px;border-top:1px solid var(--line)}
+  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;color:var(--muted);font-size:.88rem}
+  #toTop{
+    position:fixed;right:24px;bottom:24px;width:44px;height:44px;border-radius:50%;
+    background:var(--ink);color:var(--paper);border:none;cursor:pointer;font-size:1.1rem;
+    opacity:0;pointer-events:none;transition:opacity .3s;box-shadow:0 6px 18px rgba(0,0,0,.25);
+  }
+  #toTop.show{opacity:1;pointer-events:auto}
+
+  /* ================= 提示气泡（演示用） ================= */
+  #toast{
+    position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--paper);padding:12px 22px;border-radius:999px;font-size:.92rem;
+    opacity:0;transition:opacity .3s,transform .3s;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,.22);
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ================= 响应式：窄屏适配手机 ================= */
+  @media (max-width:800px){
+    header.hero{padding:64px 0 56px}
+    section{padding:56px 0}
+    .about-grid{grid-template-columns:1fr}
+    .projects{grid-template-columns:1fr 1fr}
+    .contact-box{padding:36px 26px}
+  }
+  @media (max-width:520px){
+    .projects{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(3,1fr);gap:10px}
+    .stat .num{font-size:1.6rem}
+    .nav-links{gap:16px;font-size:.9rem}
+    .nav-links a{padding:12px 0}
+    .logo{line-height:1}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<nav>
+  <div class="container nav-inner">
+    <a class="logo" href="#top">小林<b>.</b></a>
+    <div class="nav-links">
+      <a href="#about">关于</a>
+      <a href="#work">作品</a>
+      <a href="#contact">联系</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Hero 首屏 ===== -->
+<header class="hero" id="top">
+  <div class="container hero-inner">
+    <div class="eyebrow">示例网站 · 个人主页</div>
+    <h1>你好，我是<span class="accent">小林</span><br>一名独立开发者</h1>
+    <p>这是用豆包生成的示例网站。整页只有一个 HTML 文件，把你想放的自我介绍、作品和联系方式替换成自己的内容，保存后即可直接发布上线。</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-goto="work">看看我的作品</button>
+      <button class="btn btn-ghost" data-goto="contact">联系我</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 关于我 ===== -->
+<section id="about">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">ABOUT</div>
+      <h2>关于我</h2>
+      <p>一段简短的自述，让访客快速了解你是谁、做什么。</p>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>我是一名专注 Web 前端的独立开发者，喜欢把复杂的问题拆成简单、可靠的方案。过去几年里，我做过企业官网、数据看板和各类营销落地页。</p>
+        <p>这个页面是给新手看的演示模板——你可以直接复制代码，改改文字和颜色，就成了你自己的网站。</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">5</div><div class="label">年经验</div></div>
+        <div class="stat"><div class="num">30</div><div class="label">个项目</div></div>
+        <div class="stat"><div class="num">12</div><div class="label">篇文章</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 作品 ===== -->
+<section id="work">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">WORK</div>
+      <h2>精选作品</h2>
+      <p>挑几个代表性的项目放上来，每个用一句话说清它解决什么问题。</p>
+    </div>
+    <div class="projects">
+      <div class="proj" data-toast="示例：点开后是项目详情页">
+        <div class="thumb">01</div>
+        <div class="body">
+          <div class="tag">官网 · 落地页</div>
+          <h3>咖啡品牌官网</h3>
+          <p>为一家本地咖啡烘焙店设计并开发官网，突出产品与品牌故事。</p>
+        </div>
+      </div>
+      <div class="proj" data-toast="示例：点开后是项目详情页">
+        <div class="thumb">02</div>
+        <div class="body">
+          <div class="tag">数据 · 看板</div>
+          <h3>销售数据看板</h3>
+          <p>把多来源的销售数据汇总成一张实时更新的可视化看板。</p>
+        </div>
+      </div>
+      <div class="proj" data-toast="示例：点开后是项目详情页">
+        <div class="thumb">03</div>
+        <div class="body">
+          <div class="tag">营销 · 活动页</div>
+          <h3>新品发布活动页</h3>
+          <p>高转化率的活动落地页，上线两周带来大量预约注册。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 联系 ===== -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-box">
+      <div>
+        <h2>想聊一聊？</h2>
+        <p>欢迎邮件联系，或直接在下方给我留言。</p>
+        <a class="mail-link" href="mailto:hello@example.com">hello@example.com</a>
+      </div>
+      <button class="btn btn-primary" id="sendMsg" data-toast="演示：消息已发送（示例，未真正发送）">发个消息</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer>
+  <div class="container foot">
+    <span>© 2026 小林 · 示例网站</span>
+    <span>用豆包生成 · 单文件 HTML</span>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="回到顶部">↑</button>
+<div id="toast"></div>
+
+<script>
+/* ================= 交互逻辑：全部用原生 JS ================= */
+
+// 1) 平滑滚动到指定区块（导航链接 & hero 按钮）
+document.querySelectorAll('[data-goto]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var target = document.querySelector(this.dataset.goto);
+    if(target) target.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// 2) 卡片 / 按钮点击提示（演示用，替换成你自己的真实跳转即可）
+var toastTimer = null;
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+document.querySelectorAll('[data-toast]').forEach(function(el){
+  el.addEventListener('click', function(){ showToast(this.dataset.toast); });
+});
+
+// 3) 回到顶部按钮：滚动超过一屏后出现
+var toTop = document.getElementById('toTop');
+toTop.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+window.addEventListener('scroll', function(){
+  if(window.scrollY > 300){ toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
+});
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
